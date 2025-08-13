@@ -11,17 +11,6 @@ isbn TEXT
 );
 `
 
-
-## Test with curl
-# Create
-curl -X POST -H "Content-Type: application/json" -d '{"title":"Dune","author":"Frank Herbert","isbn":"9780441172719"}' http://localhost:8080/books
-
-# Update
-curl -X PUT -H "Content-Type: application/json" -d '{"title":"Dune Messiah","author":"Frank Herbert","isbn":"9780441172696"}' http://localhost:8080/books/1
-
-# Delete
-curl -X DELETE http://localhost:8080/books/1
-
 #Swagger Link
 http://localhost:8080/api/v1/swagger/index.html
 
