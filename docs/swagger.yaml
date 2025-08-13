@@ -1,0 +1,237 @@
+basePath: /api/v1/
+definitions:
+  book.Book:
+    properties:
+      author:
+        example: F. Scott Fitzgerald
+        type: string
+      id:
+        example: 1
+        type: integer
+      isbn:
+        example: "9780743273565"
+        type: string
+      title:
+        example: The Great Gatsby
+        type: string
+    type: object
+  book.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  book.PaginationRequest:
+    properties:
+      end_date:
+        type: string
+      page:
+        type: integer
+      page_size:
+        type: integer
+      search:
+        type: string
+      sort:
+        $ref: '#/definitions/book.Sort'
+      start_date:
+        type: string
+    type: object
+  book.PaginationResponse:
+    properties:
+      data: {}
+      page_count:
+        type: integer
+      total_count:
+        type: integer
+    type: object
+  book.Sort:
+    properties:
+      field:
+        type: string
+      order:
+        description: '"asc" or "desc"'
+        type: string
+    type: object
+  book.StatusResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+      timestamp:
+        type: string
+      version:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: A minimal REST API for managing books in a fictional public library
+  title: Public Library API
+  version: "1.0"
+paths:
+  /books/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a book
+      tags:
+      - books
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/book.Book'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get book by ID
+      tags:
+      - books
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated book
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/book.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/book.Book'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a book
+      tags:
+      - books
+  /books/create:
+    post:
+      consumes:
+      - application/json
+      description: Add a book to the library
+      parameters:
+      - description: Book to create
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/book.Book'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/book.Book'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new book
+      tags:
+      - books
+  /books/list:
+    post:
+      consumes:
+      - application/json
+      description: Get a paginated list of all books
+      parameters:
+      - description: Pagination and filter request
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/book.PaginationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/book.PaginationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/book.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/book.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/book.ErrorResponse'
+      summary: List all books
+      tags:
+      - books
+  /health:
+    get:
+      consumes:
+      - '*/*'
+      description: Returns server health status
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/book.StatusResponse'
+      summary: Health check
+      tags:
+      - Health
+schemes:
+- http
+swagger: "2.0"

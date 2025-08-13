@@ -1,0 +1,7 @@
+db:
+  host: 103.119.171.252
+  port: "5432"
+  user: devuser
+  password: Mgu7Hdh2XlFM
+  dbname: compliance_db
+  sslmode: disable
